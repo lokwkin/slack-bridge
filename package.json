@@ -1,0 +1,38 @@
+{
+  "name": "slack-bridge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup src/index.ts --format cjs --dts --minify --clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lokwkin/slack-bridge.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@redis/client": "^1.4.2",
+    "@slack/bolt": "^3.12.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
+    "eslint": "^8.31.0",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "tsup": "^8.0.1",
+    "typescript": "^4.9.4"
+  },
+  "bugs": {
+    "url": "https://github.com/lokwkin/slack-bridge/issues"
+  },
+  "homepage": "https://github.com/lokwkin/slack-bridge#readme"
+}
