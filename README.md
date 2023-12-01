@@ -23,11 +23,11 @@ Note:
 
 ### Install
 ```
-npm install --save slack-qna
+npm install --save slack-qna-node
 ```
 
 ```js
-import { SlackQna, IncomingMessage } from 'slack-qna';
+import { SlackQna, IncomingMessage } from 'slack-qna-node';
 
 const slackQnABot = new SlackQna({_
     slackBotToken: '<SLACK_BOT_TOKEN>',
