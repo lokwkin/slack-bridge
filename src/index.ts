@@ -1,26 +1,26 @@
 import { App, GenericMessageEvent } from "@slack/bolt";
 import { CommandHook, IncomingMessage, OutgoingMessage, Reactions } from "./schema";
 
-export interface SlackListenArgs {
+export interface SlackQnaListenArgs {
     command?: boolean,
     mention?: boolean,
     directMessage?: boolean,
 }
 
-export interface SlackBotArgs {
+export interface SlackQnaArgs {
     slackBotToken: string;
     slackAppToken: string;
     botUserId: string;
     reactions?: Reactions;
 }
-export class SlackBridge {
+export class SlackQna {
 
     private slackApp: App;
     private reactions: Reactions;
     private commandHook?: CommandHook;
     private botUserId: string;
 
-    constructor(args: SlackBotArgs) {
+    constructor(args: SlackQnaArgs) {
 
         this.slackApp = new App({
             token: args.slackBotToken,
@@ -133,7 +133,7 @@ export class SlackBridge {
 
     }
 
-    async listen(listenArgs: SlackListenArgs) {
+    async listen(listenArgs: SlackQnaListenArgs) {
 
         console.info(`[${new Date().toISOString()}] SLACK_START_LISTENING ${JSON.stringify(listenArgs)}`);
 
