@@ -1,4 +1,4 @@
-# Slack QnA
+# Slack Q&A
 
 An easy plug-and-use library for developing Slack BOT that serves a Q&A-like use case.
 
