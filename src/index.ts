@@ -1,24 +1,10 @@
 import { App, GenericMessageEvent } from "@slack/bolt";
+import { CommandHook, IncomingMessage, OutgoingMessage, Reactions } from "./schema";
 
-export type IncomingMessage = {
-    messageId: string;
-    channel: string;
-    threadId?: string;
-    raw: string;
-    message: string;
-}
-
-export type OutgoingMessage = {
-    channel: string;
-    threadId?: string;
-    data: string | Buffer;
-    dataType: 'text'|'image';
-}
-
-export type Reactions = {
-    loading?: string;
-    success?: string;
-    failed?: string;
+export interface SlackListenArgs {
+    command?: boolean,
+    mention?: boolean,
+    directMessage?: boolean,
 }
 
 export interface SlackBotArgs {
@@ -27,19 +13,6 @@ export interface SlackBotArgs {
     botUserId: string;
     reactions?: Reactions;
 }
-
-export interface SlackListenArgs {
-    command?: boolean,
-    mention?: boolean,
-    directMessage?: boolean,
-}
-
-export type CommandHook = {
-    isSync: boolean;
-    dataType: 'text'|'image';
-    handler: (message: IncomingMessage) => Promise<string|Buffer>;
-}
-
 export class SlackBridge {
 
     private slackApp: App;
@@ -69,19 +42,27 @@ export class SlackBridge {
     }
 
     async postMessage(message: OutgoingMessage) {
-        if (message.dataType === 'image' && Buffer.isBuffer(message.data)) {
+        if (message.dataType === 'text' && typeof message.data === 'string') {
+            await this.slackApp.client.chat.postMessage({
+                channel: message.channelId,
+                thread_ts: message.threadId,
+                text: message.data,
+            });
+            
+        } else if (message.dataType === 'image' && Buffer.isBuffer(message.data)) {
             await this.slackApp.client.filesUploadV2({
-                channel_id: message.channel,
+                channel_id: message.channelId,
                 thread_ts: message.threadId,
                 file: message.data,
                 filename: 'data.png',
             });
 
-        } else if (message.dataType === 'text' && typeof message.data === 'string') {
-            await this.slackApp.client.chat.postMessage({
-                channel: message.channel,
+        } else if (message.dataType === 'file' && Buffer.isBuffer(message.data)) {
+            await this.slackApp.client.filesUploadV2({
+                channel_id: message.channelId,
                 thread_ts: message.threadId,
-                text: message.data,
+                file: message.data,
+                filename: 'data.txt',
             });
         }
         
@@ -96,9 +77,9 @@ export class SlackBridge {
 
         if (this.reactions.loading) {
             const reaction = await this.slackApp.client.reactions.add({ 
-                channel: incomingMessage.channel, 
+                channel: incomingMessage.channelId,
                 name: this.reactions.loading, 
-                timestamp: incomingMessage.messageId 
+                timestamp: incomingMessage.messageId,
             });
         }
 
@@ -106,35 +87,44 @@ export class SlackBridge {
             if (this.commandHook.isSync) {
                 const message = await this.commandHook.handler(incomingMessage);
                 if (message) {
-                    await this.postMessage({
+                    this.postMessage({
                         dataType: this.commandHook.dataType,
-                        channel: incomingMessage.channel, 
+                        channelId: incomingMessage.channelId,
                         threadId: incomingMessage.messageId, 
                         data: message,
                     });
                 }
+                if (this.reactions.success) {
+                    const reaction = await this.slackApp.client.reactions.add({ 
+                        channel: incomingMessage.channelId,
+                        name: this.reactions.success, 
+                        timestamp: incomingMessage.messageId,
+                    });
+                }
+            } else {
+                await this.commandHook.handler(incomingMessage);
             }
         } catch (err) {
             console.error(err);
             if (this.reactions.failed) {
                 await this.slackApp.client.reactions.add({ 
-                    channel: incomingMessage.channel, 
+                    channel: incomingMessage.channelId,
                     name: this.reactions.failed, 
                     timestamp: incomingMessage.messageId,
                 });
             }
             await this.postMessage({
-                dataType: this.commandHook.dataType,
-                channel: incomingMessage.channel, 
+                dataType: 'text',
+                channelId: incomingMessage.channelId,
                 threadId: incomingMessage.messageId, 
-                data: `Sorry, something went wrong. (${(err instanceof Error) ? err.message : ''})`,
+                data: `Sorry, something went wrong. (${(err instanceof Error && err.message) ? err.message : ''})`,
             });
 
         } finally {
 
             if (this.reactions.loading) {
                 await this.slackApp.client.reactions.remove({ 
-                    channel: incomingMessage.channel, 
+                    channel: incomingMessage.channelId,
                     name: this.reactions.loading, 
                     timestamp: incomingMessage.messageId,
                 });
@@ -157,7 +147,7 @@ export class SlackBridge {
     
                 await this.processMessage({
                     messageId: ts,
-                    channel,
+                    channelId: channel,
                     threadId: thread_ts,
                     raw: text,
                     message: text,
@@ -179,7 +169,7 @@ export class SlackBridge {
     
                 await this.processMessage({
                     messageId: ts,
-                    channel,
+                    channelId: channel,
                     threadId: thread_ts,
                     raw: text,
                     message: text.replace(userIdTag, '').trim(),
