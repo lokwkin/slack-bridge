@@ -9,7 +9,7 @@ export type IncomingMessage = {
 export type OutgoingMessage = {
     channelId: string;
     data: string | Buffer;
-    dataType: 'text'|'image' | 'file';
+    dataType: 'text' | 'image' | 'file';
     threadId?: string;
 }
 

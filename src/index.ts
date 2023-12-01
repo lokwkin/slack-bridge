@@ -76,7 +76,7 @@ export class SlackBridge {
         }
 
         if (this.reactions.loading) {
-            const reaction = await this.slackApp.client.reactions.add({ 
+            await this.slackApp.client.reactions.add({ 
                 channel: incomingMessage.channelId,
                 name: this.reactions.loading, 
                 timestamp: incomingMessage.messageId,
@@ -95,7 +95,7 @@ export class SlackBridge {
                     });
                 }
                 if (this.reactions.success) {
-                    const reaction = await this.slackApp.client.reactions.add({ 
+                    await this.slackApp.client.reactions.add({ 
                         channel: incomingMessage.channelId,
                         name: this.reactions.success, 
                         timestamp: incomingMessage.messageId,
