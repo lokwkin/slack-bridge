@@ -1,5 +1,5 @@
 {
-  "name": "slack-bridge-node",
+  "name": "slack-qna-node",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -9,11 +9,12 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup src/index.ts --format cjs --dts --minify --clean"
+    "build": "tsup src/index.ts --format cjs --dts --minify --clean",
+    "eslint": "eslint . --ext .ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lokwkin/slack-bridge-node.git"
+    "url": "git+https://github.com/lokwkin/slack-qna-node.git"
   },
   "author": "",
   "license": "ISC",
@@ -32,7 +33,7 @@
     "typescript": "^4.9.4"
   },
   "bugs": {
-    "url": "https://github.com/lokwkin/slack-bridge-node/issues"
+    "url": "https://github.com/lokwkin/slack-qna-node/issues"
   },
-  "homepage": "https://github.com/lokwkin/slack-bridge-node#readme"
+  "homepage": "https://github.com/lokwkin/slack-qna-node#readme"
 }
