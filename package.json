@@ -1,6 +1,6 @@
 {
   "name": "slack-qna-node",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,7 +19,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@redis/client": "^1.4.2",
     "@slack/bolt": "^3.12.2"
   },
   "devDependencies": {
