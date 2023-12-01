@@ -26,7 +26,7 @@ Note:
 npm install --save slack-qna
 ```
 
-```
+```js
 import { SlackQna, IncomingMessage } from 'slack-qna';
 
 const slackQnABot = new SlackQna({_
@@ -36,12 +36,12 @@ const slackQnABot = new SlackQna({_
 });
 
 slackQnABot.registerHandler({
-  isSync: true,         // If Sync, 
-  dataType: 'image',    // Expected output
+  isSync: true,         // If isSync = true, it would reply the user with the handler function result.
+                        // If isSync = false, you would need to call slackQnABot.postMessage(OutgoingMessage) on your own.
+  dataType: 'image',    // Expected output. Can either be "text", "file" or "image"
   handler: async (message: IncomingMessage) => {
-
     // Your logic goes here.
-    return 'Hi there'.
+    return 'Hi there';
   },
 });
 
