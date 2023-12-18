@@ -21,7 +21,7 @@ Note:
 
 ## Sample use cases
 
-### Use with ChatGPT (Text Response)
+#### Use with ChatGPT (Text Response)
 ##### Loading
 <img src="./docs/chatgpt-a.png" width="50%">
 
