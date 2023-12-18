@@ -19,6 +19,17 @@ High level flow:
 Note:
 - This BOT uses Slack's Socket Mode instead of Webhook mode for slack connection, so it does not require an exposed public endpoint. But your services need to be long running.
 
+## Sample use cases
+
+#### Use with ChatGPT (Text Response)
+<img src="./docs/chatgpt-a.png" width="70%">
+<img src="./docs/chatgpt-b.png" width="50%">
+
+#### Use with Dall-E (Image Response)
+<img src="./docs/dalle-a.png" width="70%">
+<img src="./docs/dalle-b.png" width="50%">
+
+
 ## Usage
 
 ### Install
