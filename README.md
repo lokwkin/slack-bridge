@@ -21,14 +21,19 @@ Note:
 
 ## Sample use cases
 
-#### Use with ChatGPT (Text Response)
+### Use with ChatGPT (Text Response)
+##### Loading
 <img src="./docs/chatgpt-a.png" width="50%">
+
+##### Reply
 <img src="./docs/chatgpt-b.png" width="50%">
 
 #### Use with Dall-E (Image Response)
+##### Loading
 <img src="./docs/dalle-a.png" width="50%">
-<img src="./docs/dalle-b.png" width="50%">
 
+##### Reply
+<img src="./docs/dalle-b.png" width="50%">
 
 ## Usage
 
