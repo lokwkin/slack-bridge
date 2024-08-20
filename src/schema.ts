@@ -21,6 +21,6 @@ export type Reactions = {
 
 export type CommandHook = {
     isSync: boolean;
-    dataType: 'text'|'image' | 'file';
+    dataType: 'text'|'image' | 'file' | 'markdown';
     handler: (message: IncomingMessage) => Promise<string|Buffer>;
 }
