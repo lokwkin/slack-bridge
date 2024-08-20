@@ -48,7 +48,20 @@ export class SlackQna {
                 thread_ts: message.threadId,
                 text: message.data,
             });
-            
+        } else if (message.dataType === 'markdown' && typeof message.data === 'string') {
+            await this.slackApp.client.chat.postMessage({
+                channel: message.channelId,
+                thread_ts: message.threadId,
+                blocks: [
+                    {
+                        type: 'section',
+                        text: {
+                            type: 'mrkdwn',
+                            text: message.data,
+                        },
+                    },
+                ],
+            });
         } else if (message.dataType === 'image' && Buffer.isBuffer(message.data)) {
             await this.slackApp.client.filesUploadV2({
                 channel_id: message.channelId,
