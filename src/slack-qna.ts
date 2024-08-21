@@ -70,6 +70,7 @@ export class SlackQna {
                 channel: message.channelId,
                 thread_ts: message.threadId,
                 blocks: [block],
+                text: message.data,
             });
         } else if (message.dataType === 'markdown' && typeof message.data === 'string') {
             const mrkdwn = this.markdownToMrkdwn(message.data);
@@ -96,6 +97,7 @@ export class SlackQna {
                 channel: message.channelId,
                 thread_ts: message.threadId,
                 blocks: [block],
+                text: message.data,
             });
         } else if (message.dataType === 'image' && Buffer.isBuffer(message.data)) {
             await this.slackApp.client.filesUploadV2({
@@ -239,6 +241,8 @@ export class SlackQna {
         // Convert headers
         mrkdwn = mrkdwn.replace(/^# (.*$)/gm, '*$1*');
         mrkdwn = mrkdwn.replace(/^## (.*$)/gm, '*$1*');
+        mrkdwn = mrkdwn.replace(/^### (.*$)/gm, '*$1*');
+
         mrkdwn = mrkdwn.replace(/^### (.*$)/gm, '*$1*');
         
         // Convert bold
