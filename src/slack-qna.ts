@@ -117,7 +117,7 @@ export class SlackQna {
     }
 
     async processMessage(incomingMessage: IncomingMessage) {
-        console.log(`[${new Date().toISOString()}] SLACK_PROCESS_MESSAGE ${JSON.stringify(incomingMessage)}`);
+        console.info(`[${new Date().toISOString()}] SLACK_PROCESS_MESSAGE ${JSON.stringify(incomingMessage)}`);
 
         if (!this.commandHook) {
             return;
@@ -211,7 +211,6 @@ export class SlackQna {
         
                 const userIdTag = `<@${this.botUserId}>`;
                 const { text, ts, channel, thread_ts } = event;
-                console.log(text, userIdTag);
                 if (!text.includes(userIdTag)) {
                     return;
                 }
@@ -265,7 +264,6 @@ export class SlackQna {
         // Convert ordered lists
         mrkdwn = mrkdwn.replace(/^\d+\. (.*$)/gm, '• $1');
         
-        console.log(mrkdwn);
         return mrkdwn;
     }
 }
