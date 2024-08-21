@@ -9,8 +9,9 @@ export type IncomingMessage = {
 export type OutgoingMessage = {
     channelId: string;
     data: string | Buffer;
-    dataType: 'text' | 'image' | 'file' | 'markdown';
+    dataType: 'text' | 'image' | 'file' | 'markdown' |'mrkdwn';
     threadId?: string;
+    block?: 'section' | 'context';
 }
 
 export type Reactions = {
@@ -21,6 +22,7 @@ export type Reactions = {
 
 export type CommandHook = {
     isSync: boolean;
-    dataType: 'text'|'image' | 'file' | 'markdown';
+    dataType: 'text'|'image' | 'file' | 'markdown' | 'mrkdwn';
+    block?: 'section' | 'context';
     handler: (message: IncomingMessage) => Promise<string|Buffer>;
 }

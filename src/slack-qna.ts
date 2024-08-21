@@ -48,21 +48,54 @@ export class SlackQna {
                 thread_ts: message.threadId,
                 text: message.data,
             });
-        } else if (message.dataType === 'markdown' && typeof message.data === 'string') {
+        } else if (message.dataType === 'mrkdwn' && typeof message.data === 'string') {
+            const block = message.block === 'section' ? 
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: message.data,
+                    },
+                } : 
+                {
+                    type: 'context',
+                    elements: [
+                        {
+                            type: 'mrkdwn',
+                            text: message.data,
+                        },
+                    ],
+                };
             await this.slackApp.client.chat.postMessage({
                 channel: message.channelId,
                 thread_ts: message.threadId,
-                blocks: [
-                    {
-                        type: 'context',
-                        elements: [
-                            {
-                                type: 'mrkdwn',
-                                text: message.data,
-                            },
-                        ],
+                blocks: [block],
+            });
+        } else if (message.dataType === 'markdown' && typeof message.data === 'string') {
+            const mrkdwn = this.markdownToMrkdwn(message.data);
+
+            const block = message.block === 'section' ? 
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: mrkdwn,
                     },
-                ],
+                } : 
+                {
+                    type: 'context',
+                    elements: [
+                        {
+                            type: 'mrkdwn',
+                            text: mrkdwn,
+                        },
+                    ],
+                };
+
+            await this.slackApp.client.chat.postMessage({
+                channel: message.channelId,
+                thread_ts: message.threadId,
+                blocks: [block],
             });
         } else if (message.dataType === 'image' && Buffer.isBuffer(message.data)) {
             await this.slackApp.client.filesUploadV2({
@@ -104,6 +137,7 @@ export class SlackQna {
                 if (message) {
                     this.postMessage({
                         dataType: this.commandHook.dataType,
+                        block: this.commandHook.block,
                         channelId: incomingMessage.channelId,
                         threadId: incomingMessage.messageId, 
                         data: message,
@@ -194,5 +228,44 @@ export class SlackQna {
     
         
         await this.slackApp.start();
+    }
+
+    markdownToMrkdwn(markdown: string) {
+
+        let mrkdwn = markdown;
+
+        mrkdwn = mrkdwn.replace(/\n\s*\n/gm, '\n\n');
+        mrkdwn = mrkdwn.replace(/^\s*/gm, '');
+        
+        // Convert headers
+        mrkdwn = mrkdwn.replace(/^# (.*$)/gm, '*$1*');
+        mrkdwn = mrkdwn.replace(/^## (.*$)/gm, '*$1*');
+        mrkdwn = mrkdwn.replace(/^### (.*$)/gm, '*$1*');
+        
+        // Convert bold
+        mrkdwn = mrkdwn.replace(/\*\*(.*?)\*\*/g, '*$1*');
+        
+        // Convert italic
+        mrkdwn = mrkdwn.replace(/\_(.*?)\_/g, '_$1_');
+        
+        // Convert inline code
+        mrkdwn = mrkdwn.replace(/`([^`]+)`/g, '`$1`');
+        
+        // Convert code blocks
+        mrkdwn = mrkdwn.replace(/```[\s\S]*?```/g, (match) => {
+            return '```' + match.slice(3, -3).trim() + '```';
+        });
+        
+        // Convert links
+        mrkdwn = mrkdwn.replace(/\[(.*?)\]\((.*?)\)/g, '<$2|$1>');
+        
+        // Convert unordered lists
+        mrkdwn = mrkdwn.replace(/^\* (.*$)/gm, '• $1');
+        
+        // Convert ordered lists
+        mrkdwn = mrkdwn.replace(/^\d+\. (.*$)/gm, '• $1');
+        
+        console.log(mrkdwn);
+        return mrkdwn;
     }
 }
