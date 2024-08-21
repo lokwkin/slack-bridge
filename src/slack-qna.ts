@@ -54,11 +54,13 @@ export class SlackQna {
                 thread_ts: message.threadId,
                 blocks: [
                     {
-                        type: 'section',
-                        text: {
-                            type: 'mrkdwn',
-                            text: message.data,
-                        },
+                        type: 'context',
+                        elements: [
+                            {
+                                type: 'mrkdwn',
+                                text: message.data,
+                            },
+                        ],
                     },
                 ],
             });
