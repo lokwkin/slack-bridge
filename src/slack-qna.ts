@@ -190,11 +190,11 @@ export class SlackQna {
 
         if (listenArgs.directMessage) {
             this.slackApp.message(async ({ message }) => {
-                console.info(`[${new Date().toISOString()}] SLACK_RECEIVED_DIRECT_MESSAGE ${JSON.stringify(message)}`);
                 const { ts, thread_ts, channel, text } = <GenericMessageEvent>message;
                 if (!text) {
                     return;
                 }
+                console.info(`[${new Date().toISOString()}] SLACK_RECEIVED_DIRECT_MESSAGE ${JSON.stringify(message)}`);
     
                 await this.processMessage({
                     messageId: ts,
@@ -207,15 +207,13 @@ export class SlackQna {
         }
         
         if (listenArgs.mention) {
-            this.slackApp.event('app_mention', async ({ event }) => {
-    
-                console.info(`[${new Date().toISOString()}] SLACK_RECEIVED_MENTION ${JSON.stringify(event)}`);
-        
+            this.slackApp.event('app_mention', async ({ event }) => {        
                 const userIdTag = `<@${this.botUserId}>`;
                 const { text, ts, channel, thread_ts } = event;
                 if (!text.includes(userIdTag)) {
                     return;
                 }
+                console.info(`[${new Date().toISOString()}] SLACK_RECEIVED_MENTION ${JSON.stringify(event)}`);
     
                 await this.processMessage({
                     messageId: ts,

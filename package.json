@@ -1,6 +1,6 @@
 {
   "name": "slack-qna-node",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
